@@ -1,6 +1,6 @@
 package RobustifyBackend.Payload.request;
 
-import RobustifyBackend.model.EDepartment;
+import RobustifyBackend.model.User.EDepartment;
 import RobustifyBackend.model.User.ERole;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -8,8 +8,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import java.util.Set;
 
 public class SignUpRequest {
     @NotBlank

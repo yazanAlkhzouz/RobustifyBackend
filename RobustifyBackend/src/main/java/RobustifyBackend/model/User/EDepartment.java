@@ -1,4 +1,4 @@
-package RobustifyBackend.model;
+package RobustifyBackend.model.User;
 
 public enum EDepartment {
     DESIGN,

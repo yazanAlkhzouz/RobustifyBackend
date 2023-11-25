@@ -1,11 +1,10 @@
 package RobustifyBackend.Repositories;
 
-import RobustifyBackend.model.Contacts.Contacts;
+import RobustifyBackend.model.Invoices.Invoices;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ContactRepository extends JpaRepository<Contacts, Long> {
-    Boolean existsByEmail(String email);
-
+public interface InvoiceRepository extends JpaRepository<Invoices, String > {
+     boolean existsById(String id);
 }

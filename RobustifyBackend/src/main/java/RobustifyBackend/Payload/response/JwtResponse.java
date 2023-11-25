@@ -1,9 +1,7 @@
 package RobustifyBackend.Payload.response;
 
-import RobustifyBackend.model.EDepartment;
+import RobustifyBackend.model.User.EDepartment;
 import RobustifyBackend.model.User.ERole;
-
-import java.util.List;
 
 public class JwtResponse {
     private String token;

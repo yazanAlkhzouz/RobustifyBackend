@@ -1,6 +1,6 @@
 package RobustifyBackend.SecurityConfig.services;
 
-import RobustifyBackend.model.EDepartment;
+import RobustifyBackend.model.User.EDepartment;
 import RobustifyBackend.model.User.ERole;
 import RobustifyBackend.model.User.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
 
