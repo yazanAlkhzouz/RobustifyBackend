@@ -38,7 +38,7 @@ public class Order {
 
     @OneToOne
     @JoinColumn(name = "userId")
-    private User assign_to;
+    private User assignto;
 
     @NotNull
     private LocalDate deadline;
@@ -61,12 +61,12 @@ public class Order {
 
     }
 
-    public Order(Items item, Integer quantity, double width, double height, User assign_to, LocalDate deadline, double consumptions, double cost, Status status, Contacts customer) {
+    public Order(Items item, Integer quantity, double width, double height, User assignto, LocalDate deadline, double consumptions, double cost, Status status, Contacts customer) {
         this.item = item;
         this.quantity = quantity;
         this.width = width;
         this.height = height;
-        this.assign_to = assign_to;
+        this.assignto = assignto;
         this.deadline = deadline;
         this.consumptions = consumptions;
         this.cost = cost;
@@ -107,11 +107,11 @@ public class Order {
     }
 
     public User getAssign_to() {
-        return assign_to;
+        return assignto;
     }
 
     public void setAssign_to(User assign_to) {
-        this.assign_to = assign_to;
+        this.assignto = assign_to;
     }
 
     public LocalDate getDeadline() {

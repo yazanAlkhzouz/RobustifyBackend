@@ -1,8 +1,12 @@
 package RobustifyBackend.Services;
 
+import RobustifyBackend.Controllers.DTOs.UpdateOrderStatus;
+import RobustifyBackend.Controllers.DTOs.UpdatePurchaseStatus;
 import RobustifyBackend.Repositories.PurchaseRepository;
+import RobustifyBackend.model.Order.Order;
 import RobustifyBackend.model.Purchases.Purchase;
 import RobustifyBackend.model.Purchases.Status;
+import RobustifyBackend.model.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,19 +16,21 @@ public class PurchaseService {
     @Autowired
     private PurchaseRepository purchaseRepository;
 
-    @Transactional
-    public void updateQuantity(Long id, Integer quantity) {
-        Purchase purchase = purchaseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Purchase not found"));
-        purchase.setQuantity(quantity);
-        purchaseRepository.save(purchase);
-    }
 
     @Transactional
-    public void updateStatus(Long id, Status status) {
+    public Purchase updatePurchase(Long id, UpdatePurchaseStatus request) {
         Purchase purchase = purchaseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Purchase not found"));
-        purchase.setStatus(status);
-        purchaseRepository.save(purchase);
+
+        if (request.getStatus() != null) {
+            purchase.setStatus(request.getStatus());
+        }
+        if (request.getQuantity() != null) {
+            purchase.setQuantity(request.getQuantity());
+
+        }
+
+        return purchaseRepository.save(purchase);
     }
+
 }

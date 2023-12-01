@@ -1,12 +1,18 @@
 package RobustifyBackend.Controllers;
 
+import RobustifyBackend.Controllers.DTOs.UserDTO;
 import RobustifyBackend.Payload.request.SignUpRequest;
 import RobustifyBackend.Payload.response.MessageResponse;
+import RobustifyBackend.Repositories.OrderRepository;
 import RobustifyBackend.Repositories.UserRepository;
 import RobustifyBackend.SecurityConfig.jwt.JwtUtils;
+import RobustifyBackend.Services.UtilizationService;
+import RobustifyBackend.model.Order.Order;
+import RobustifyBackend.model.User.EDepartment;
 import RobustifyBackend.model.User.User;
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +38,12 @@ public class UserController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    private UtilizationService utilizationService;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
     @PostMapping("/users")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if (userRepositories.existsByUsername(signUpRequest.getUsername())) {
@@ -50,11 +62,58 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
+//    @GetMapping("/users")
+//    public ResponseEntity<List<User>> getAllUsers() {
+//        List<User> users = userRepositories.findAll();
+//
+//        return ResponseEntity.ok(users);
+//    }
+
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userRepositories.findAll();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<?> getAllUsers( @RequestParam(name = "department") String departmentStr,
+                                                      @RequestParam(name = "utilization", required = false) Boolean utilizationRequested) {
+        EDepartment department ;
+        try {
+           department= EDepartment.valueOf(departmentStr);
+
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.badRequest().body("Invalid department value");
+
+        }
+        List<User> users = userRepositories.findByDepartment(department);
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(user.getUserName());
+            userDTO.setDepartment(user.getDepartment());
+            userDTO.setRole(user.getRoles());
+
+            if (utilizationRequested != null && utilizationRequested) {
+
+            // Fetch orders assigned to the user
+            List<Order> assignedOrders = orderRepository.findByAssignto(user);
+
+            // Calculate total material consumption if needed
+            double totalMaterialConsumption = 0;
+            if (user.getDepartment() == EDepartment.PRINTING || user.getDepartment() == EDepartment.CUTTING_PACKAGING) {
+                for (Order order : assignedOrders) {
+                    totalMaterialConsumption += order.getConsumptions();
+                }
+            }
+
+            // Calculate utilization
+                double utilization = utilizationService.calculateUtilization(user.getDepartment(), assignedOrders.size(), totalMaterialConsumption);
+                userDTO.setUtilization(utilization);
+                userDTO.setNumberOfOrders(assignedOrders.size());
+
+            }
+            userDTOs.add(userDTO);
+        }
+
+        return ResponseEntity.ok(userDTOs);
     }
+
 
     @PutMapping("/users/{userId}")
     public ResponseEntity<MessageResponse> updateUser(@PathVariable Long userId,

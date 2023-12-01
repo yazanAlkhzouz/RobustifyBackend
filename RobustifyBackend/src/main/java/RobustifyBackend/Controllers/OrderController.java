@@ -40,6 +40,8 @@ public class OrderController {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+
+
     @PostMapping("/order")
     public ResponseEntity<?> createOrder(@Valid @RequestBody Order orderDTO) {
 
@@ -70,6 +72,7 @@ public class OrderController {
         inventoryRepository.save(inventoryItem);
 
         orderRepository.save(order);
+
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
@@ -91,25 +94,14 @@ public class OrderController {
     }
 
     @PutMapping("/order/{id}")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody UpdateOrderStatus request) {
+    public ResponseEntity<?> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderStatus request) {
         try {
-            orderService.updateStatus(id, request.getStatus());
-            return ResponseEntity.ok().build();
+            Order updatedOrder = orderService.updateOrder(id, request);
+            return ResponseEntity.ok(updatedOrder);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @PutMapping("/order/{orderId}/assignUser/{userId}")
-    public ResponseEntity<Order> assignUserToOrder(@PathVariable Long orderId, @PathVariable Long userId) {
-        try {
-            Order updatedOrder = orderService.assignUser(orderId, userId);
-            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
 
     @DeleteMapping("/order/{id}")
     public ResponseEntity<MessageResponse> deleteorder(@PathVariable Long id) {

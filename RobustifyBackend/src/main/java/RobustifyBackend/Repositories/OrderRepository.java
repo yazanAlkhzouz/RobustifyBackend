@@ -7,16 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-//    Integer countByAssign_toContaining(User user);
-@Query("SELECT COUNT(distinct o) FROM Order o JOIN o.assign_to u WHERE u = :user")
-Integer countOrdersAssignedToUser(@Param("user") User user);
-    @Query("SELECT SUM(o.consumptions) FROM Order o JOIN o.assign_to u WHERE u.id = :userId")
-    Double sumMaterialConsumptionByUserId(@Param("userId") Long userId);
-
+        List<Order> findByAssignto(User user);
 
 }

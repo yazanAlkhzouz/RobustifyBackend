@@ -1,6 +1,5 @@
 package RobustifyBackend.Controllers;
 
-import RobustifyBackend.Controllers.DTOs.UpdatePurchaseQuantity;
 import RobustifyBackend.Controllers.DTOs.UpdatePurchaseStatus;
 import RobustifyBackend.Payload.response.MessageResponse;
 import RobustifyBackend.Repositories.ContactRepository;
@@ -72,26 +71,16 @@ public class PurchaseController {
             return ResponseEntity.ok(purchases);
             }
 
-    @PutMapping("/purchaseQuantity/{id}")
-    public ResponseEntity<?> updateQuantity(@PathVariable Long id, @RequestBody UpdatePurchaseQuantity request) {
+
+    @PutMapping("/purchase/{id}")
+    public ResponseEntity<?> updatePurchase(@PathVariable Long id, @RequestBody UpdatePurchaseStatus request) {
         try {
-            purchaseService.updateQuantity(id, request.getQuantity());
+            purchaseService.updatePurchase(id, request);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @PutMapping("/purchaseStatus/{id}")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody UpdatePurchaseStatus request) {
-        try {
-            purchaseService.updateStatus(id, request.getStatus());
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
 
     @DeleteMapping("/purchase/{id}")
     public ResponseEntity<MessageResponse> deletePurchase(@PathVariable Long id) {
