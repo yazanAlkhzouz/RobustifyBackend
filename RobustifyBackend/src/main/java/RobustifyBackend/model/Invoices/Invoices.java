@@ -15,12 +15,17 @@ import java.time.LocalDate;
 public class Invoices {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "order_invoice")
     private Order order;
+
+    private Integer invoice_number;
+
+    @NotNull
+    private double discount;
 
     @NotNull
     private double total_price;
@@ -28,19 +33,24 @@ public class Invoices {
     @NotNull
     private double grand_total;
 
-    @NotBlank
+    @NotNull
     private LocalDate invoice_date;
 
     public Invoices() {
 
     }
 
-    public Invoices(Order order, double total_price, double grand_total, LocalDate invoice_date) {
+    public Invoices(Order order, int invoice_number ,double discount,double total_price, double grand_total, LocalDate invoice_date) {
         this.order = order;
+        this.invoice_number = invoice_number;
+        this.discount = discount;
         this.total_price = total_price;
         this.grand_total = grand_total;
         this.invoice_date = invoice_date;
     }
+
+
+
 
     public Long getId() {
         return id;
@@ -54,6 +64,9 @@ public class Invoices {
         return order;
     }
 
+    public  double getDiscount(){return discount;}
+
+    public void setDiscount(double discount){this.discount = discount;}
     public void setOrder(Order order) {
         this.order = order;
     }
@@ -80,5 +93,13 @@ public class Invoices {
 
     public void setInvoice_date(LocalDate invoice_date) {
         this.invoice_date = invoice_date;
+    }
+
+    public int getInvoice_number() {
+        return invoice_number;
+    }
+
+    public void setInvoice_number(int invoice_number) {
+        this.invoice_number = invoice_number;
     }
 }
